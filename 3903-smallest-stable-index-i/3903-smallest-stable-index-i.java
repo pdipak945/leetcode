@@ -1,11 +1,14 @@
 class Solution {
     public int firstStableIndex(int[] nums, int k) {
-        int[] running = getReverseMinArray(nums);
+        //precompute minimums from right to left
+        int[] running = computeSuffixMins(nums);
 
-        int max = Integer.MIN_VALUE;
+        int prefixMax = Integer.MIN_VALUE;
+        //iterate from left to right tracking the maximum
         for(int i=0; i<nums.length; i++){
-            max = Math.max(max, nums[i]);
-            if( max-running[i] <=k){
+            prefixMax = Math.max(prefixMax, nums[i]);
+
+            if( prefixMax - running[i] <= k ){
                 return i;
             }
         }
@@ -13,14 +16,14 @@ class Solution {
         return -1;
     }
 
-    public int[] getReverseMinArray(int[] nums){
+    public int[] computeSuffixMins(int[] nums){
         int[] runningMinArray = new int[nums.length];
         
-        int min = Integer.MAX_VALUE;
+        int suffixMin = Integer.MAX_VALUE;
         
         for(int i=nums.length-1; i>=0; i--){
-            min = Math.min(min, nums[i]);
-            runningMinArray[i] = min;
+            suffixMin = Math.min(suffixMin, nums[i]);
+            runningMinArray[i] = suffixMin;
         }
 
         return runningMinArray;
